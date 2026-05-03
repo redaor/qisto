@@ -11,9 +11,11 @@ import { DebtDetail }  from '@/pages/DebtDetail'
 import { Profile }     from '@/pages/Profile'
 import { WhatIf }      from '@/pages/WhatIf'
 import { Treasury }    from '@/pages/Treasury'
-import { SharedDebt }  from '@/pages/SharedDebt'
-import { Login }       from '@/pages/Login'
-import { Register }    from '@/pages/Register'
+import { SharedDebt }   from '@/pages/SharedDebt'
+import { BankConnect }  from '@/pages/BankConnect'
+import { BankCallback } from '@/pages/BankCallback'
+import { Login }        from '@/pages/Login'
+import { Register }     from '@/pages/Register'
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -55,7 +57,9 @@ function AppRoutes() {
         <Route path="/debts"           element={<Debts />} />
         <Route path="/debts/:id"       element={<DebtDetail />} />
         <Route path="/add"             element={<AddDebt />} />
-        <Route path="/treasury"         element={<Treasury />} />
+        <Route path="/treasury"        element={<Treasury />} />
+        <Route path="/bank/connect"    element={<BankConnect />} />
+        <Route path="/bank/callback"   element={<BankCallback />} />
         <Route path="/profile"         element={<Profile />} />
         <Route path="/whatif"          element={<WhatIf />} />
         <Route path="/shared/:token"   element={<SharedDebt />} />

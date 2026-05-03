@@ -4,6 +4,7 @@ import { useDebtStore } from '@/store/useDebtStore'
 import { ScenarioCard } from '@/components/profile/ScenarioCard'
 import { CsvImport } from '@/components/profile/CsvImport'
 import { BudgetAdvisor } from '@/components/profile/BudgetAdvisor'
+import { BankBalanceWidget } from '@/components/BankBalanceWidget'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { DebtEvolutionChart } from '@/components/charts/DebtEvolutionChart'
@@ -11,16 +12,18 @@ import { calcScenarios, calcTotals, isDebtFreeTargetAchievable } from '@/lib/cal
 import { formatCurrency } from '@/lib/formatters'
 import { exportDebtsPDF } from '@/lib/exportPdf'
 import { useAuth } from '@/hooks/useAuth'
+import { supabase } from '@/lib/supabase'
 import type { Currency } from '@/types'
 import type { PaymentScenario } from '@/types'
 import type { RawTransaction } from '@/lib/pdfParser'
 
-type Tab = 'dashboard' | 'simulation' | 'settings'
+type Tab = 'dashboard' | 'bank' | 'simulation' | 'settings'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: 'dashboard',  label: 'Tableau de bord', icon: '🧠' },
-  { id: 'simulation', label: 'Simulation',       icon: '📈' },
-  { id: 'settings',   label: 'Réglages',         icon: '⚙️' },
+  { id: 'dashboard',  label: 'Bilan',      icon: '🧠' },
+  { id: 'bank',       label: 'Banque',     icon: '🏦' },
+  { id: 'simulation', label: 'Simulation', icon: '📈' },
+  { id: 'settings',   label: 'Réglages',   icon: '⚙️' },
 ]
 
 const CURRENCIES: { value: Currency; label: string; flag: string }[] = [
@@ -65,6 +68,7 @@ export function Profile() {
     const raw = localStorage.getItem(LS_TXS_KEY)
     return raw ? deserializeTxs(raw) : []
   })
+  const [hasBankConnection, setHasBankConnection] = useState(false)
 
   // ── Persistance des transactions importées ────────────────────────────────
   useEffect(() => {
@@ -85,7 +89,15 @@ export function Profile() {
   useEffect(() => {
     fetchProfile()
     fetchDebts()
-  }, [])
+    if (user) {
+      supabase
+        .from('bridge_connections')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .maybeSingle()
+        .then(({ data }) => setHasBankConnection(!!data))
+    }
+  }, [user])
 
   useEffect(() => {
     if (profile) {
@@ -251,7 +263,48 @@ export function Profile() {
         )}
 
         {/* ════════════════════════════════════════════════════════════
-            ONGLET 2 — SIMULATION & DETTE
+            ONGLET 2 — BANQUE (OPEN BANKING)
+        ════════════════════════════════════════════════════════════ */}
+        {activeTab === 'bank' && (
+          <>
+            {hasBankConnection && user ? (
+              <BankBalanceWidget
+                userId={user.id}
+                debts={debts}
+                currency={currency}
+              />
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl p-6 text-white">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold mb-2">Open Banking</h2>
+                  <p className="text-indigo-100 text-sm">
+                    Synchronisez votre banque pour suivre vos remboursements en temps réel.
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate('/bank/connect')}
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl
+                             bg-indigo-600 text-white text-sm font-semibold shadow-sm
+                             hover:bg-indigo-700 active:scale-95 transition-all"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                  Connecter ma banque
+                </button>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ════════════════════════════════════════════════════════════
+            ONGLET 3 — SIMULATION & DETTE
         ════════════════════════════════════════════════════════════ */}
         {activeTab === 'simulation' && (
           <>
