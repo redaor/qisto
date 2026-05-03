@@ -9,8 +9,8 @@ export function DebtProgressBar({ total, remaining }: DebtProgressBarProps) {
   return (
     <div className="w-full">
       <div className="flex justify-between text-xs text-gray-400 mb-1">
-        <span>{progress}% paid</span>
-        <span>{100 - progress}% left</span>
+        <span>{progress}% remboursé</span>
+        <span>{100 - progress}% restant</span>
       </div>
       <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div

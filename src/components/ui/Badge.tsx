@@ -3,9 +3,9 @@ interface BadgeProps {
 }
 
 const config = {
-  owed_to_me: { label: 'Owes me',  classes: 'bg-emerald-100 text-emerald-700' },
-  i_owe:      { label: 'I owe',    classes: 'bg-red-100 text-red-700' },
-  paid:       { label: 'Paid',     classes: 'bg-gray-100 text-gray-500' },
+  owed_to_me: { label: 'On me doit', classes: 'bg-emerald-100 text-emerald-700' },
+  i_owe:      { label: 'Je dois',    classes: 'bg-red-100 text-red-700' },
+  paid:       { label: 'Remboursé',  classes: 'bg-gray-100 text-gray-500' },
 }
 
 export function Badge({ type }: BadgeProps) {

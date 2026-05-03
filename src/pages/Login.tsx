@@ -19,7 +19,7 @@ export function Login() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError(error.message)
+      setError('Email ou mot de passe incorrect.')
       setLoading(false)
     } else {
       navigate('/')
@@ -31,11 +31,11 @@ export function Login() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-emerald-600">Qisto</h1>
-          <p className="text-gray-500 mt-1 text-sm">Track your debts, stay in control</p>
+          <p className="text-gray-500 mt-1 text-sm">Gérez vos dettes, restez en contrôle</p>
         </div>
 
         <form onSubmit={handleLogin} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4">
-          <h2 className="font-semibold text-lg text-gray-900">Sign in</h2>
+          <h2 className="font-semibold text-lg text-gray-900">Connexion</h2>
 
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
@@ -46,16 +46,16 @@ export function Login() {
           <Input
             label="Email"
             type="email"
-            placeholder="you@example.com"
+            placeholder="vous@exemple.com"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
             autoComplete="email"
           />
           <Input
-            label="Password"
+            label="Mot de passe"
             type="password"
-            placeholder="Your password"
+            placeholder="Votre mot de passe"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
@@ -63,13 +63,13 @@ export function Login() {
           />
 
           <Button type="submit" loading={loading} className="w-full mt-2">
-            Sign in
+            Se connecter
           </Button>
 
           <p className="text-center text-sm text-gray-500">
-            No account?{' '}
+            Pas de compte ?{' '}
             <Link to="/register" className="text-emerald-600 font-medium hover:underline">
-              Create one
+              En créer un
             </Link>
           </p>
         </form>

@@ -1,11 +1,15 @@
-export type DebtType = 'owed_to_me' | 'i_owe'
-export type DebtStatus = 'active' | 'paid' | 'archived'
+export type DebtType     = 'owed_to_me' | 'i_owe'
+export type DebtStatus   = 'active' | 'paid' | 'archived'
+export type Currency     = 'EUR' | 'DZD' | 'USD'
+export type DebtCategory = 'loan' | 'rent' | 'food' | 'travel' | 'service' | 'other'
+export type RepayStrategy = 'avalanche' | 'snowball' | 'equal'
 
 export interface UserProfile {
   id: string
   salary_net: number
   fixed_charges: number
-  currency: string
+  currency: Currency
+  debt_free_target: string | null
   updated_at: string
 }
 
@@ -18,8 +22,13 @@ export interface Debt {
   remaining_amount: number
   description: string | null
   due_date: string | null
+  start_date: string | null
+  paid_at: string | null
   status: DebtStatus
   created_at: string
+  interest_rate: number
+  category: DebtCategory
+  min_payment: number
 }
 
 export interface Payment {
@@ -41,6 +50,8 @@ export interface PaymentScenario {
 export interface SalaryInput {
   salary_net: number
   fixed_charges: number
+  currency: Currency
+  debt_free_target?: string | null
 }
 
 export interface DebtFormData {
@@ -49,4 +60,35 @@ export interface DebtFormData {
   total_amount: number
   description: string
   due_date: string
+  start_date: string
+  interest_rate: number
+  category: DebtCategory
+  min_payment: number
+}
+
+export interface DebtWithUrgency extends Debt {
+  daysUntilDue: number | null
+  isUrgent: boolean
+}
+
+export interface WhatIfResult {
+  months: number
+  endDate: string
+  totalInterest: number
+}
+
+export interface PersonGroup {
+  contact_name: string
+  debts: Debt[]
+  totalOwed: number
+  totalOwing: number
+  net: number
+}
+
+export interface SharedLink {
+  id: string
+  debt_id: string
+  token: string
+  expires_at: string
+  created_at: string
 }

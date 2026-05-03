@@ -7,12 +7,13 @@ import { formatCurrency } from '@/lib/formatters'
 interface PaymentModalProps {
   debtId: string
   remaining: number
+  defaultAmount?: number
   onClose: () => void
 }
 
-export function PaymentModal({ debtId, remaining, onClose }: PaymentModalProps) {
-  const [amount, setAmount] = useState('')
-  const [note, setNote] = useState('')
+export function PaymentModal({ debtId, remaining, defaultAmount, onClose }: PaymentModalProps) {
+  const [amount, setAmount] = useState(defaultAmount ? String(defaultAmount) : '')
+  const [note, setNote]     = useState('')
   const { recordPayment, loading } = useDebtStore()
 
   const handleSubmit = async () => {
@@ -28,11 +29,11 @@ export function PaymentModal({ debtId, remaining, onClose }: PaymentModalProps) 
       onClick={e => e.target === e.currentTarget && onClose()}
     >
       <div className="bg-white rounded-2xl w-full max-w-sm p-6 space-y-4">
-        <h2 className="text-lg font-semibold">Record a payment</h2>
-        <p className="text-sm text-gray-500">Remaining: {formatCurrency(remaining)}</p>
+        <h2 className="text-lg font-semibold">Combien as-tu versé ?</h2>
+        <p className="text-sm text-gray-500">Restant : <span className="font-medium text-gray-700">{formatCurrency(remaining)}</span></p>
 
         <Input
-          label="Amount"
+          label="Montant versé"
           type="number"
           prefix="€"
           placeholder="0"
@@ -43,21 +44,21 @@ export function PaymentModal({ debtId, remaining, onClose }: PaymentModalProps) 
           step={0.01}
         />
         <Input
-          label="Note (optional)"
-          placeholder="e.g. First installment"
+          label="Note (optionnel)"
+          placeholder="ex. Premier versement"
           value={note}
           onChange={e => setNote(e.target.value)}
         />
 
         <div className="flex gap-3 pt-2">
-          <Button variant="outline" className="flex-1" onClick={onClose}>Cancel</Button>
+          <Button variant="outline" className="flex-1" onClick={onClose}>Annuler</Button>
           <Button
             className="flex-1"
             loading={loading}
             disabled={!amount || parseFloat(amount) <= 0}
             onClick={handleSubmit}
           >
-            Confirm
+            Confirmer
           </Button>
         </div>
       </div>

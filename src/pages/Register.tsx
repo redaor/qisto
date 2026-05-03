@@ -13,7 +13,7 @@ export function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (password.length < 6) { setError('Password must be at least 6 characters'); return }
+    if (password.length < 6) { setError('Le mot de passe doit contenir au moins 6 caractères.'); return }
     setLoading(true)
     setError(null)
 
@@ -32,11 +32,11 @@ export function Register() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-emerald-600">Qisto</h1>
-          <p className="text-gray-500 mt-1 text-sm">Track your debts, stay in control</p>
+          <p className="text-gray-500 mt-1 text-sm">Gérez vos dettes, restez en contrôle</p>
         </div>
 
         <form onSubmit={handleRegister} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4">
-          <h2 className="font-semibold text-lg text-gray-900">Create account</h2>
+          <h2 className="font-semibold text-lg text-gray-900">Créer un compte</h2>
 
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
@@ -47,28 +47,28 @@ export function Register() {
           <Input
             label="Email"
             type="email"
-            placeholder="you@example.com"
+            placeholder="vous@exemple.com"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
           />
           <Input
-            label="Password"
+            label="Mot de passe"
             type="password"
-            placeholder="At least 6 characters"
+            placeholder="Au moins 6 caractères"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
           />
 
           <Button type="submit" loading={loading} className="w-full mt-2">
-            Create account
+            Créer mon compte
           </Button>
 
           <p className="text-center text-sm text-gray-500">
-            Already have an account?{' '}
+            Déjà un compte ?{' '}
             <Link to="/login" className="text-emerald-600 font-medium hover:underline">
-              Sign in
+              Se connecter
             </Link>
           </p>
         </form>
